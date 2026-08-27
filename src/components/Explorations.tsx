@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, Code2 } from 'lucide-react';
+import { ArrowUpRight, Code2, Cpu, Activity, Compass } from 'lucide-react';
 import { EXPLORATIONS, type ExplorationItem } from '../data/portfolioData';
 import LightboxModal from './LightboxModal';
 import Magnetic from './Magnetic';
@@ -12,6 +12,7 @@ export const Explorations: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const pinnedContentRef = useRef<HTMLDivElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const ringsRef = useRef<HTMLDivElement>(null);
   const col1Ref = useRef<HTMLDivElement>(null);
   const col2Ref = useRef<HTMLDivElement>(null);
   const [activeItem, setActiveItem] = useState<ExplorationItem | null>(null);
@@ -25,6 +26,7 @@ export const Explorations: React.FC = () => {
     const section = sectionRef.current;
     const pinnedContent = pinnedContentRef.current;
     const videoContainer = videoContainerRef.current;
+    const rings = ringsRef.current;
     const col1 = col1Ref.current;
     const col2 = col2Ref.current;
 
@@ -51,7 +53,17 @@ export const Explorations: React.FC = () => {
         });
       }
 
-      // 3. Parallax animation for Column 1
+      // 3. Rotating kinetic geometric orbit rings
+      if (rings) {
+        gsap.to(rings, {
+          rotation: 360,
+          duration: 75,
+          ease: 'none',
+          repeat: -1,
+        });
+      }
+
+      // 4. Parallax animation for Column 1
       gsap.fromTo(
         col1,
         { y: 120 },
@@ -67,7 +79,7 @@ export const Explorations: React.FC = () => {
         }
       );
 
-      // 4. Parallax animation for Column 2 (Opposite / offset speed)
+      // 5. Parallax animation for Column 2 (Opposite / offset speed)
       gsap.fromTo(
         col2,
         { y: 380 },
@@ -115,6 +127,53 @@ export const Explorations: React.FC = () => {
 
         {/* Bottom Fade Gradient */}
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
+      </div>
+
+      {/* ================= KINETIC GEOMETRIC ORBIT SHAPES & RINGS ================= */}
+      <div
+        ref={ringsRef}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[850px] h-[700px] sm:h-[850px] rounded-full pointer-events-none opacity-45 z-0"
+      >
+        {/* Outer dashed orbit ring */}
+        <div className="absolute inset-0 rounded-full border border-dashed border-[#89AACC]/40 shadow-[0_0_20px_rgba(137,170,204,0.15)]" />
+        
+        {/* Middle geometric ring with dual luminous orbiting nodes */}
+        <div className="absolute inset-16 sm:inset-20 rounded-full border border-[#4E85BF]/35">
+          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#89AACC] shadow-[0_0_15px_#89AACC]" />
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#4E85BF] shadow-[0_0_12px_#4E85BF]" />
+        </div>
+        
+        {/* Inner geometric crosshair rings */}
+        <div className="absolute inset-32 sm:inset-40 rounded-full border border-white/15" />
+        <div className="absolute inset-48 sm:inset-60 rounded-full border border-dashed border-stroke/80" />
+      </div>
+
+      {/* ================= SCANNING LASER LIGHT BEAM ================= */}
+      <div className="absolute inset-x-0 h-40 pointer-events-none z-0 overflow-hidden opacity-30">
+        <div
+          className="w-full h-[2px] bg-gradient-to-r from-transparent via-[#89AACC] to-transparent shadow-[0_0_15px_#4E85BF] animate-scroll-down"
+          style={{ animationDuration: '6s' }}
+        />
+      </div>
+
+      {/* ================= PRECISION HUD TELEMETRY GAUGES ================= */}
+      <div className="absolute top-24 left-8 md:left-14 font-mono text-[11px] text-muted/70 tracking-widest hidden sm:flex flex-col gap-2 pointer-events-none z-10">
+        <div className="flex items-center gap-2">
+          <Cpu className="w-3.5 h-3.5 text-[#89AACC]" />
+          <span>[CORE.ENGINE: SHADER LAB 4.2]</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+          <span>[RAYMARCHING: ACTIVE // 120 FPS]</span>
+        </div>
+      </div>
+
+      <div className="absolute top-24 right-8 md:right-14 font-mono text-[11px] text-muted/70 tracking-widest hidden sm:flex flex-col items-end gap-2 pointer-events-none z-10">
+        <div className="flex items-center gap-2">
+          <span>[LAT: 31.5204° N // LON: 74.3587° E]</span>
+          <Compass className="w-3.5 h-3.5 text-[#89AACC]" />
+        </div>
+        <span className="text-[10px] text-muted/40">LAHORE STUDIO NODE</span>
       </div>
 
       {/* ================= LAYER 1: PINNED CENTER TITLE (z-10) ================= */}
